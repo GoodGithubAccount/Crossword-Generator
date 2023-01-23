@@ -24,7 +24,7 @@ public class Test {
             textArray[indexToSwap] = tempString;
         }
 
-        //s
+        //ss
 
         for(int i = 0; i < textArray.length; i++){
             System.out.println(textArray[i]);
