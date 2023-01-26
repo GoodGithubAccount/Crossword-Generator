@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Test {
@@ -23,6 +25,8 @@ public class Test {
             textArray[i] = textArray[indexToSwap];
             textArray[indexToSwap] = tempString;
         }
+
+        List<String> wordList = Arrays.stream(textArray).toList();
 
         //ss
 
