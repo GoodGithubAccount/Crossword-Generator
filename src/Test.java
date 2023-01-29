@@ -129,17 +129,20 @@ public class Test {
 
 
         // TODO: Make this optional with a setting.
-        //  Should probably also add a way to change the size of the groups
         Random random = new Random(System.currentTimeMillis());
-        for(int j = 0; j < textArray.length/20; j++){
-            for (int i = 0; i < textArray.length / 20; i++) {
-                String tempString = textArray[(j * 20) + i];
-                int indexToSwap = random.nextInt(textArray.length / 20) + (j * 20);
+        // TODO: Implement better so its actually group size and not just used for division.
+        //  Right now its not very transparent because it works inversely. E.g higher number smaller groups.
+        //  Also doesnt work correctly at all numbers cause bad division. Implement modulus
+        int groupSize = 10;
+        for(int j = 0; j < textArray.length/groupSize; j++){
+            for (int i = 0; i < textArray.length / groupSize; i++) {
+                String tempString = textArray[(j * groupSize) + i];
+                int indexToSwap = random.nextInt(textArray.length / groupSize) + (j * groupSize);
                 if(indexToSwap > textArray.length){
-                    indexToSwap -= 5;
+                    indexToSwap -= (indexToSwap - textArray.length);
                 }
 
-                textArray[(j * 20) + i] = textArray[indexToSwap];
+                textArray[(j * groupSize) + i] = textArray[indexToSwap];
                 textArray[indexToSwap] = tempString;
             }
         }
