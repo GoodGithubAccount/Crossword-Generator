@@ -33,36 +33,38 @@ public class Test {
 
         List<String> wordList = new ArrayList<>(Arrays.asList(textArray));
         int placedWords = 0;
+        int attempts = 0;
 
-        while (placedWords < textArray.length) {
-            if (tryPlace(wordList.get(0), placedWords)) {
-                for (int i = 0; i < crossArray.length; i++) {
-                    for (int j = 0; j < crossArray.length; j++) {
-                        if (crossArray[i][j] != '#') {
-                            System.out.print(" " + ConsoleColors.BLUE_BOLD + crossArray[i][j] + ConsoleColors.RESET + " ");
-                        } else {
-                            System.out.print(" " + crossArray[i][j] + " ");
-                        }
-                    }
-                    System.out.println();
-                }
+        while (placedWords < textArray.length && attempts < 2000000) {
+            boolean randomDirection = random.nextBoolean();
+            if (tryPlace(wordList.get(0), placedWords, randomDirection)) {
                 wordList.remove(0);
                 placedWords++;
+                attempts = 0;
             } else {
+                attempts++;
                 String word = wordList.get(0);
                 wordList.remove(0);
                 wordList.add(word);
             }
         }
 
-        for (int i = 0; i < textArray.length; i++) {
-            System.out.println(textArray[i]);
+        for (int i = 0; i < crossArray.length; i++) {
+            for (int j = 0; j < crossArray.length; j++) {
+                if (crossArray[i][j] != '#') {
+                    System.out.print(" " + ConsoleColors.BLUE_BOLD + crossArray[i][j] + ConsoleColors.RESET + " ");
+                } else {
+                    System.out.print(" " + crossArray[i][j] + " ");
+                }
+            }
+            System.out.println();
         }
+        System.out.println("Total Words: " + placedWords + "/" + textArray.length);
 
         return null;
     }
 
-    static Boolean tryPlace(String word, int placedWords) {
+    static Boolean tryPlace(String word, int placedWords, boolean randomDirection) {
 
         if (placedWords == 0) {
             if (word.length() <= crossArray.length) {
@@ -71,16 +73,23 @@ public class Test {
                     // Change it to be random direction later
                     crossArray[i + position][position + 1] = word.charAt(i);
                 }
-                System.out.println(word);
                 return true;
             } else {
                 return false; // error too maybe
             }
         } else {
-            if (tryHorizontal(word)) {
-                return true;
+            if (randomDirection) {
+                if (tryHorizontal(word)) {
+                    return true;
+                } else {
+                    return tryVertical(word);
+                }
             } else {
-                return tryVertical(word);
+                if (tryVertical(word)) {
+                    return true;
+                } else {
+                    return tryHorizontal(word);
+                }
             }
         }
     }
