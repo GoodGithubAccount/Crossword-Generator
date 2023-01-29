@@ -89,7 +89,13 @@ public class Test {
     static Boolean tryVertical2(String word, int i, int c, int j){
         try {
             if(crossArray[i - c - 1][j] != '#') return false;
-            if(crossArray[i - c + word.length() + 1][j] != '#') return false;
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+
+        }
+
+        try {
+            if(crossArray[i - c + word.length()][j] != '#') return false;
         }
         catch(ArrayIndexOutOfBoundsException e){
 
@@ -125,9 +131,20 @@ public class Test {
                     countMinus = 0;
                 }
             }
-            else if(crossArray[i + k - c][j] == '#' && result[0] && result[1]){
-                countPlus = 0;
-                countMinus = 0;
+            else if(crossArray[i + k - c][j] == '#'){
+                if(!result[0]){
+                    return false;
+                }
+                else{
+                    countPlus = 0;
+                }
+
+                if(!result[1]){
+                    return false;
+                }
+                else{
+                    countMinus = 0;
+                }
             }
             else{
                 return false;
@@ -157,7 +174,7 @@ public class Test {
         return false;
     }
 
-    static Boolean[] verifyPosition(int x, int y, char letter, boolean isHorizontal) {
+    static Boolean[] verifyPosition(int y, int x, char letter, boolean isHorizontal) {
         int xPlus = 0;
         int yPlus = 0;
         if (isHorizontal) {
@@ -169,18 +186,17 @@ public class Test {
         boolean flagPlus = false;
         boolean flagMinus = false;
 
-
-        if (y + yPlus > crossArray.length || x + xPlus > crossArray.length ||
-                y + yPlus < crossArray.length || x + xPlus < crossArray.length) {
+        if (y + yPlus >= crossArray.length || x + xPlus >= crossArray.length ||
+                y + yPlus < 0 || x + xPlus < 0) {
             flagPlus = true;
-        } else if (crossArray[x + xPlus][y + yPlus] == '#') {
+        } else if (crossArray[y + yPlus][x + xPlus] == '#') {
             flagPlus = true;
         }
 
-        if (y - yPlus > crossArray.length || x - xPlus > crossArray.length ||
-                y - yPlus < crossArray.length || x - xPlus < crossArray.length) {
+        if (y - yPlus >= crossArray.length || x - xPlus >= crossArray.length ||
+                y - yPlus < 0 || x - xPlus < 0) {
             flagMinus = true;
-        } else if (crossArray[x - xPlus][y - yPlus] == '#') {
+        } else if (crossArray[y - yPlus][x - xPlus] == '#') {
             flagMinus = true;
         }
 
@@ -190,7 +206,13 @@ public class Test {
     static Boolean tryHorizontal2(String word, int i, int c, int j){
         try {
             if(crossArray[i][j - c - 1] != '#') return false;
-            if(crossArray[i][j - c + word.length() + 1] != '#') return false;
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+
+        }
+
+        try {
+            if(crossArray[i][j - c + word.length()] != '#') return false;
         }
         catch(ArrayIndexOutOfBoundsException e){
 
@@ -225,14 +247,24 @@ public class Test {
                     countMinus = 0;
                 }
             }
-            else if(crossArray[i][j + k - c] == '#' && result[0] && result[1]){
-                countPlus = 0;
-                countMinus = 0;
+            else if(crossArray[i][j + k - c] == '#'){
+                if(!result[0]){
+                    return false;
+                }
+                else{
+                    countPlus = 0;
+                }
+
+                if(!result[1]){
+                    return false;
+                }
+                else{
+                    countMinus = 0;
+                }
             }
             else{
                 return false;
             }
-
 
             if(countPlus >= 2 || countMinus >= 2){
                 return false;
