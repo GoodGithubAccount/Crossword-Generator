@@ -4,10 +4,11 @@ public class Test {
     static char crossArray[][] = {};
 
     public static void main(String[] args) {
-        String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase();
-        String[] textArray = textData.split("-");
 
-        int startSize = 10;
+        String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase();
+        String[] textArray = testData.split("\n");
+
+        int startSize = 30;
 
         crossBuilder(startSize, textArray);
     }
@@ -33,7 +34,7 @@ public class Test {
         List<String> wordList = new ArrayList<>(Arrays.asList(textArray));
         int placedWords = 0;
 
-        while (placedWords < 6) {
+        while (placedWords < textArray.length) {
             if (tryPlace(wordList.get(0), placedWords)) {
                 for (int i = 0; i < crossArray.length; i++) {
                     for (int j = 0; j < crossArray.length; j++) {
@@ -85,58 +86,70 @@ public class Test {
     }
 
 
+    static Boolean tryVertical2(String word, int i, int c, int j){
+        try {
+            if(crossArray[i - c - 1][j] != '#') return false;
+            if(crossArray[i - c + word.length() + 1][j] != '#') return false;
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+
+        }
+
+
+        int countPlus = 0;
+        int countMinus = 0;
+        for (int k = 0; k < word.length(); k++) {
+            try {
+                if (crossArray[i + k - c][j] != '#' && crossArray[i + k - c][j] != word.charAt(k)) {
+                    return false;
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return false;
+            }
+
+
+            Boolean[] result = verifyPosition((i + k - c), j, word.charAt(k), false);
+
+            if(crossArray[i + k - c][j] == word.charAt(k)){
+                if(!result[0]){
+                    countPlus++;
+                }
+                else{
+                    countPlus = 0;
+                }
+
+                if(!result[1]){
+                    countMinus++;
+                }
+                else{
+                    countMinus = 0;
+                }
+            }
+            else if(crossArray[i + k - c][j] == '#' && result[0] && result[1]){
+                countPlus = 0;
+                countMinus = 0;
+            }
+            else{
+                return false;
+            }
+
+            if(countPlus >= 2 || countMinus >= 2){
+                return false;
+            }
+        }
+        for (int k = 0; k < word.length(); k++) {
+            crossArray[i + k - c][j] = word.charAt(k);
+        }
+        System.out.println(word);
+        return true;
+    }
+
     static Boolean tryVertical(String word) {
         for (int i = 0; i < crossArray.length; i++) {
             for (int j = 0; j < crossArray.length; j++) {
                 for (int c = 0; c < word.length(); c++) {
                     if (crossArray[i][j] == word.charAt(c)) {
-                        int countPlus = 0;
-                        int countMinus = 0;
-                        for (int k = 0; k < word.length(); k++) {
-                            try {
-                                if (crossArray[i + k - c][j] != '#' && crossArray[i + k - c][j] != word.charAt(k)) {
-                                    return false;
-                                }
-                            } catch (ArrayIndexOutOfBoundsException e) {
-                                return false;
-                            }
-
-
-                            Boolean[] result = verifyPosition((i + k - c), j, word.charAt(k), false);
-
-                            if(crossArray[i + k - c][j] == word.charAt(k)){
-                                if(!result[0]){
-                                    countPlus++;
-                                }
-                                else{
-                                    countPlus = 0;
-                                }
-
-                                if(!result[1]){
-                                    countMinus++;
-                                }
-                                else{
-                                    countMinus = 0;
-                                }
-                            }
-                            else if(crossArray[i + k - c][j] == '#' && result[0] && result[1]){
-                                countPlus = 0;
-                                countMinus = 0;
-                            }
-                            else{
-                                return false;
-                            }
-
-                            if(countPlus >= 2 || countMinus >= 2){
-                                System.out.println("HOW???");
-                                return false;
-                            }
-                        }
-                        for (int k = 0; k < word.length(); k++) {
-                            crossArray[i + k - c][j] = word.charAt(k);
-                        }
-                        System.out.println(word);
-                        return true;
+                        if(tryVertical2(word, i, c, j)) return true;
                     }
                 }
             }
@@ -174,66 +187,202 @@ public class Test {
         return new Boolean[]{flagPlus, flagMinus};
     }
 
+    static Boolean tryHorizontal2(String word, int i, int c, int j){
+        try {
+            if(crossArray[i][j - c - 1] != '#') return false;
+            if(crossArray[i][j - c + word.length() + 1] != '#') return false;
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+
+        }
+
+        int countPlus = 0;
+        int countMinus = 0;
+
+        for (int k = 0; k < word.length(); k++) {
+            try {
+                if (crossArray[i][j + k - c] != '#' && crossArray[i][j + k - c] != word.charAt(k)) {
+                    return false;
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return false;
+            }
+
+            Boolean[] result = verifyPosition(i, (j + k - c), word.charAt(k), true);
+
+            if(crossArray[i][j + k - c] == word.charAt(k)){
+                if(!result[0]){
+                    countPlus++;
+                }
+                else{
+                    countPlus = 0;
+                }
+
+                if(!result[1]){
+                    countMinus++;
+                }
+                else{
+                    countMinus = 0;
+                }
+            }
+            else if(crossArray[i][j + k - c] == '#' && result[0] && result[1]){
+                countPlus = 0;
+                countMinus = 0;
+            }
+            else{
+                return false;
+            }
+
+
+            if(countPlus >= 2 || countMinus >= 2){
+                return false;
+            }
+        }
+        for (int k = 0; k < word.length(); k++) {
+            crossArray[i][j + k - c] = word.charAt(k);
+        }
+        System.out.println(word);
+        return true;
+    }
 
     static Boolean tryHorizontal(String word) {
         for (int i = 0; i < crossArray.length; i++) {
             for (int j = 0; j < crossArray.length; j++) {
                 for (int c = 0; c < word.length(); c++) {
                     if (crossArray[i][j] == word.charAt(c)) {
-                        int countPlus = 0;
-                        int countMinus = 0;
-
-                        for (int k = 0; k < word.length(); k++) {
-                            try {
-                                if (crossArray[i][j + k - c] != '#' && crossArray[i][j + k - c] != word.charAt(k)) {
-                                    return false;
-                                }
-                            } catch (ArrayIndexOutOfBoundsException e) {
-                                return false;
-                            }
-
-                            Boolean[] result = verifyPosition(i, (j + k - c), word.charAt(k), true);
-
-                            if(crossArray[i][j + k - c] == word.charAt(k)){
-                                if(!result[0]){
-                                    countPlus++;
-                                }
-                                else{
-                                    countPlus = 0;
-                                }
-
-                                if(!result[1]){
-                                    countMinus++;
-                                }
-                                else{
-                                    countMinus = 0;
-                                }
-                            }
-                            else if(crossArray[i][j + k - c] == '#' && result[0] && result[1]){
-                                countPlus = 0;
-                                countMinus = 0;
-                            }
-                            else{
-                                return false;
-                            }
-
-
-                            if(countPlus >= 2 || countMinus >= 2){
-                                System.out.println("HOW???");
-                                return false;
-                            }
-                        }
-                        for (int k = 0; k < word.length(); k++) {
-                            crossArray[i][j + k - c] = word.charAt(k);
-                        }
-                        System.out.println(word);
-                        return true;
+                        if(tryHorizontal2(word, i, c, j)) return true;
                     }
                 }
             }
         }
         return false;
     }
+
+    // Quick dirty test data to measure against
+    // TODO: Obv load from txt or json later
+    static String testData = "ANTHEMS\n" +
+            "PORSCHE\n" +
+            "SIM\n" +
+            "PROJECT\n" +
+            "THESIS\n" +
+            "HINTSA\n" +
+            "DTS\n" +
+            "FRISIA\n" +
+            "NURBURGRING\n" +
+            "ABU\n" +
+            "JEANDRAPEAU\n" +
+            "THANKS\n" +
+            "ENZO\n" +
+            "LID\n" +
+            "ERES\n" +
+            "GERMAN\n" +
+            "TWEETS\n" +
+            "DERRIERE\n" +
+            "OI\n" +
+            "HAIR\n" +
+            "ASSETTO\n" +
+            "UNI\n" +
+            "EU\n" +
+            "AH\n" +
+            "TENDONS\n" +
+            "CRB\n" +
+            "ACE\n" +
+            "GAMER\n" +
+            "NEON\n" +
+            "OR\n" +
+            "RED\n" +
+            "TAX\n" +
+            "EAR\n" +
+            "NINTH\n" +
+            "TOE\n" +
+            "SIX\n" +
+            "MEGA\n" +
+            "ITSTHECAR\n" +
+            "ROUEN\n" +
+            "GR\n" +
+            "SECA\n" +
+            "AUDI\n" +
+            "NSFW\n" +
+            "AS\n" +
+            "KOBE\n" +
+            "OCON\n" +
+            "GATE\n" +
+            "MONZA\n" +
+            "MPG\n" +
+            "SAGITTARIUS\n" +
+            "HOOP\n" +
+            "AR\n" +
+            "WASH\n" +
+            "DEGRADED\n" +
+            "GONDOLA\n" +
+            "OIL\n" +
+            "RAND\n" +
+            "LAURA\n" +
+            "QATAR\n" +
+            "SPA\n" +
+            "SKIRTS\n" +
+            "MIXED\n" +
+            "APIS\n" +
+            "STROLL\n" +
+            "BOT\n" +
+            "ROSSI\n" +
+            "NECK\n" +
+            "AT\n" +
+            "MRI\n" +
+            "PIETRO\n" +
+            "HUNGRIA\n" +
+            "SIA\n" +
+            "MRSATURDAY\n" +
+            "THIRD\n" +
+            "STAMPS\n" +
+            "SINGAPORE\n" +
+            "HARDTIRES\n" +
+            "SON\n" +
+            "DRIVEITOUT\n" +
+            "FLARES\n" +
+            "GASLY\n" +
+            "JONES\n" +
+            "RASCASSE\n" +
+            "NINETYONE\n" +
+            "GEARBOX\n" +
+            "ERS\n" +
+            "WINE\n" +
+            "DRAG\n" +
+            "EVREUX\n" +
+            "TACO\n" +
+            "INTERS\n" +
+            "ENGINES\n" +
+            "USA\n" +
+            "HERTA\n" +
+            "CATERING\n" +
+            "MONACO\n" +
+            "NFT\n" +
+            "AM\n" +
+            "REG\n" +
+            "MILK\n" +
+            "ICE\n" +
+            "TRACKWALK\n" +
+            "SENATE\n" +
+            "INSTAGRAM\n" +
+            "GRAZ\n" +
+            "NAN\n" +
+            "FERRARI\n" +
+            "BOSE\n" +
+            "SARGEANT\n" +
+            "BLOG\n" +
+            "GTD\n" +
+            "MUDDIER\n" +
+            "PADEL\n" +
+            "GRO\n" +
+            "SHIRTS\n" +
+            "IAN\n" +
+            "HONDA\n" +
+            "POLES\n" +
+            "SOUR\n" +
+            "DRS\n" +
+            "LAST\n" +
+            "AIR\n" +
+            "ALL";
 }
 
 
