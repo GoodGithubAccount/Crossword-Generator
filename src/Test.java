@@ -129,7 +129,7 @@ public class Test {
         }
 
         try {
-            if(crossArray[i - c + word.length() + 1][j] != '#') return false;
+            if(crossArray[i - c + word.length()][j] != '#') return false;
         }
         catch(ArrayIndexOutOfBoundsException e){
 
@@ -245,7 +245,7 @@ public class Test {
         }
 
         try {
-            if(crossArray[i][j - c + word.length() + 1] != '#') return false;
+            if(crossArray[i][j - c + word.length()] != '#') return false;
         }
         catch(ArrayIndexOutOfBoundsException e){
 
