@@ -1,6 +1,10 @@
 # Crossword-Generator 
 
 ### Iteration 1
+Nvm that, 115/123 at 30x30
+
+![idea64_2023-01-29_11-09-24](https://user-images.githubusercontent.com/22419372/215319286-9ea6a2d5-e798-4a13-88a5-a306537c4e0a.png)
+
 Think this is the best result so far, 107/123 words at size 30x30
 
 ![image](https://user-images.githubusercontent.com/22419372/215318925-606c26d7-9589-41bb-98af-42529aa6deb7.png)
