@@ -2,6 +2,12 @@
 
 It works like ass 🤡🤡 the code is more ass
 
+### Iteration 1.11
+121/123 at 30x30
+So close but so far
+
+![idea64_2023-01-29_13-25-59](https://user-images.githubusercontent.com/22419372/215326051-cb1e06fd-6254-4344-9a8d-a7b4b69a7ccd.png)
+
 ### Iteration 1.1
 Nvm that, 115/123 at 30x30
 
