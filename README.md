@@ -1,7 +1,7 @@
 # Crossword-Generator 
 
 ### Iteration 1
-Nvm that
+Nvm that, 112/123 at 30x30
 
 ![idea64_2023-01-29_11-05-46](https://user-images.githubusercontent.com/22419372/215319080-2fcd66d0-38e1-403a-926a-a3225000720b.png)
 
