@@ -3,17 +3,32 @@ import java.util.*;
 public class Test {
     static char crossArray[][] = {};
 
+    // Times to try on a crossword with no progress before giving up and starting a new one
+    static int tryCrosswordLimit = 20000;
+
+    // Other method is sorted by length. Longest first.
+    // TODO: Make an enum with more options
+    static boolean useRandomMethod = false;
+
+    // Size to start at.
+    // TODO: Shrink on success and try again.
+    static int startSize = 30;
+
+    // TODO: Important! Add a check to see if all letters are matched on intended placement location
+    //  In that case, the word is invalid cause it's already completely written out.
     public static void main(String[] args) {
 
         String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase(); // Old small test data.
         String[] textArray = testData.split("\n");
 
-        int startSize = 30;
-        boolean useRandomMethod = false; // Other method is sorted by length. Longest first.
-
         int placedWords = 0;
+        int largestSoFar = 0;
         while(placedWords < textArray.length){
             placedWords = crossBuilder(startSize, textArray, useRandomMethod);
+            if(placedWords > largestSoFar){
+                largestSoFar = placedWords;
+            }
+            System.out.println("Largest so far: " + largestSoFar + "/" + textArray.length);
         }
     }
 
@@ -35,11 +50,10 @@ public class Test {
         int attempts = 0;
 
         Random random = new Random(System.currentTimeMillis());
-        while (placedWords < textArray.length && attempts < 100000) {
+        while (placedWords < textArray.length && attempts < tryCrosswordLimit) {
             boolean randomDirection = random.nextBoolean();
             if (tryPlace(wordList.get(0), placedWords, randomDirection)) {
                 placedWords++;
-                System.out.println("Word " + placedWords + " Placed: " + wordList.get(0));
                 attempts = 0;
                 wordList.remove(0);
             } else {
@@ -90,12 +104,15 @@ public class Test {
         }
 
         Random random = new Random(System.currentTimeMillis());
-        for(int j = 0; j < textArray.length/10; j++){
-            for (int i = 0; i < textArray.length / 10; i++) {
-                String tempString = textArray[(j * 10) + i];
-                int indexToSwap = random.nextInt(textArray.length);
+        for(int j = 0; j < textArray.length/12; j++){
+            for (int i = 0; i < textArray.length / 12; i++) {
+                String tempString = textArray[(j * 12) + i];
+                int indexToSwap = random.nextInt(textArray.length / 12) + (j * 12);
+                if(indexToSwap > textArray.length){
+                    indexToSwap -= 5;
+                }
 
-                textArray[(j * 10) + i] = textArray[indexToSwap];
+                textArray[(j * 12) + i] = textArray[indexToSwap];
                 textArray[indexToSwap] = tempString;
             }
         }
