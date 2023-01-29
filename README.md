@@ -3,10 +3,12 @@
 It works like ass 🤡🤡 the code is more ass
 
 ### Iteration 1.11
-121/123 at 30x30
-So close but so far
+122/123 at 30x30
+So close but so far.
 
-![idea64_2023-01-29_13-25-59](https://user-images.githubusercontent.com/22419372/215326051-cb1e06fd-6254-4344-9a8d-a7b4b69a7ccd.png)
+![idea64_2023-01-29_13-28-42](https://user-images.githubusercontent.com/22419372/215326156-7091005f-ca76-4a39-8661-ea39964c02d8.png)
+
+I should probably save the missing words so I can check. It's probably a short word with rare letters, where the space has already been taken up.
 
 ### Iteration 1.1
 Nvm that, 115/123 at 30x30
