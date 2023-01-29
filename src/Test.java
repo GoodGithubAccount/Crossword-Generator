@@ -4,8 +4,9 @@ public class Test {
     static char crossArray[][] = {};
     static char savedCrossArray[][] = {};
 
-    // Times to try on a crossword with no progress before giving up and starting a new one
-    static int tryCrosswordLimit = 20000;
+    // Times to try with no progress before giving up
+    // TODO: Implement
+    static int tryCrosswordLimit = 5000;
 
     // Other method is sorted by length. Longest first.
     // TODO: Make an enum with more options
@@ -15,8 +16,11 @@ public class Test {
     // TODO: Shrink on success and try again.
     static int startSize = 30;
 
-    // TODO: Important! Add a check to see if all letters are matched on intended placement location
-    //  In that case, the word is invalid cause it's already completely written out.
+    // Whether to always print the generated crossword
+    // Or if program should only print when a better one has been created
+    // TODO: Implement
+    static boolean alwaysPrint = false;
+
     public static void main(String[] args) {
 
         String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase(); // Old small test data.
@@ -24,24 +28,24 @@ public class Test {
 
         int placedWords = 0;
         int largestSoFar = 0;
-        while(placedWords < textArray.length){
+        while (placedWords < textArray.length) {
             placedWords = crossBuilder(startSize, textArray, useRandomMethod);
-            if(placedWords > largestSoFar){
+            if (placedWords > largestSoFar) {
                 largestSoFar = placedWords;
                 savedCrossArray = crossArray;
-            }
 
-            for (int i = 0; i < savedCrossArray.length; i++) {
-                for (int j = 0; j < savedCrossArray.length; j++) {
-                    if (savedCrossArray[i][j] != '#') {
-                        System.out.print(" " + ConsoleColors.RED_BOLD + savedCrossArray[i][j] + ConsoleColors.RESET + " ");
-                    } else {
-                        System.out.print(" " + savedCrossArray[i][j] + " ");
+                for (int i = 0; i < savedCrossArray.length; i++) {
+                    for (int j = 0; j < savedCrossArray.length; j++) {
+                        if (savedCrossArray[i][j] != '#') {
+                            System.out.print(" " + ConsoleColors.RED_BOLD + savedCrossArray[i][j] + ConsoleColors.RESET + " ");
+                        } else {
+                            System.out.print(" " + savedCrossArray[i][j] + " ");
+                        }
                     }
+                    System.out.println();
                 }
-                System.out.println();
+                System.out.println("Largest so far: " + largestSoFar + "/" + textArray.length);
             }
-            System.out.println("Largest so far: " + largestSoFar + "/" + textArray.length);
         }
     }
 
@@ -54,7 +58,7 @@ public class Test {
             }
         }
 
-        if(useRandomMethod) textArray = randomArray(textArray);
+        if (useRandomMethod) textArray = randomArray(textArray);
         else textArray = sortedByLengthArray(textArray);
 
         List<String> wordList = new ArrayList<>(Arrays.asList(textArray));
@@ -62,8 +66,12 @@ public class Test {
         int placedWords = 0;
         int attempts = 0;
 
+        // TODO: Should prob update this to also be - placedWords.
+        //  Insignificant change rn tho
+        int maxAttempts = textArray.length;
+
         Random random = new Random(System.currentTimeMillis());
-        while (placedWords < textArray.length && attempts < tryCrosswordLimit) {
+        while (placedWords < textArray.length && attempts < maxAttempts) {
             boolean randomDirection = random.nextBoolean();
             if (tryPlace(wordList.get(0), placedWords, randomDirection)) {
                 placedWords++;
@@ -77,6 +85,9 @@ public class Test {
             }
         }
 
+        // TODO: Hook up to always print or not,
+        //  program probably needs a delay if alwaysprint is on.
+        /*
         for (int i = 0; i < crossArray.length; i++) {
             for (int j = 0; j < crossArray.length; j++) {
                 if (crossArray[i][j] != '#') {
@@ -88,11 +99,12 @@ public class Test {
             System.out.println();
         }
         System.out.println("Total Words: " + placedWords + "/" + textArray.length);
+        */
 
         return placedWords;
     }
 
-    static String[] randomArray(String[] textArray){
+    static String[] randomArray(String[] textArray) {
 
         Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < textArray.length; i++) {
@@ -106,33 +118,32 @@ public class Test {
         return textArray;
     }
 
-    static String[] sortedByLengthArray(String[] textArray){
+    static String[] sortedByLengthArray(String[] textArray) {
         Arrays.sort(textArray, Comparator.comparingInt(String::length));
 
-        for(int i = 0; i < textArray.length / 2; i++)
-        {
+        for (int i = 0; i < textArray.length / 2; i++) {
             String temp = textArray[i];
             textArray[i] = textArray[textArray.length - i - 1];
             textArray[textArray.length - i - 1] = temp;
         }
 
 
-        // TODO: Make this optional by setting
-        /*
+        // TODO: Make this optional with a setting.
+        //  Should probably also add a way to change the size of the groups
         Random random = new Random(System.currentTimeMillis());
-        for(int j = 0; j < textArray.length/12; j++){
-            for (int i = 0; i < textArray.length / 12; i++) {
-                String tempString = textArray[(j * 12) + i];
-                int indexToSwap = random.nextInt(textArray.length / 12) + (j * 12);
+        for(int j = 0; j < textArray.length/20; j++){
+            for (int i = 0; i < textArray.length / 20; i++) {
+                String tempString = textArray[(j * 20) + i];
+                int indexToSwap = random.nextInt(textArray.length / 20) + (j * 20);
                 if(indexToSwap > textArray.length){
                     indexToSwap -= 5;
                 }
 
-                textArray[(j * 12) + i] = textArray[indexToSwap];
+                textArray[(j * 20) + i] = textArray[indexToSwap];
                 textArray[indexToSwap] = tempString;
             }
         }
-        */
+
 
 
         return textArray;
@@ -169,18 +180,16 @@ public class Test {
     }
 
 
-    static Boolean tryVertical2(String word, int i, int c, int j){
+    static Boolean tryVertical2(String word, int i, int c, int j) {
         try {
-            if(crossArray[i - c - 1][j] != '#') return false;
-        }
-        catch(ArrayIndexOutOfBoundsException e){
+            if (crossArray[i - c - 1][j] != '#') return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
 
         }
 
         try {
-            if(crossArray[i - c + word.length()][j] != '#') return false;
-        }
-        catch(ArrayIndexOutOfBoundsException e){
+            if (crossArray[i - c + word.length()][j] != '#') return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
 
         }
 
@@ -200,43 +209,37 @@ public class Test {
 
             Boolean[] result = verifyPosition((i + k - c), j, word.charAt(k), false);
 
-            if(crossArray[i + k - c][j] == word.charAt(k)){
+            if (crossArray[i + k - c][j] == word.charAt(k)) {
                 letterCount++;
-                if(!result[0]){
+                if (!result[0]) {
                     countPlus++;
-                }
-                else{
+                } else {
                     countPlus = 0;
                 }
 
-                if(!result[1]){
+                if (!result[1]) {
                     countMinus++;
-                }
-                else{
+                } else {
                     countMinus = 0;
                 }
-            }
-            else if(crossArray[i + k - c][j] == '#'){
-                if(!result[0]){
+            } else if (crossArray[i + k - c][j] == '#') {
+                if (!result[0]) {
                     return false;
-                }
-                else{
+                } else {
                     countPlus = 0;
                 }
 
-                if(!result[1]){
+                if (!result[1]) {
                     return false;
-                }
-                else{
+                } else {
                     countMinus = 0;
                 }
-            }
-            else{
+            } else {
                 return false;
             }
 
-            if(countPlus >= 2 || countMinus >= 2 || letterCount == word.length()){
-                if(letterCount == word.length()){
+            if (countPlus >= 2 || countMinus >= 2 || letterCount == word.length()) {
+                if (letterCount == word.length()) {
                     System.out.println("TEST\n\n\nTEST\n\n\nTEST");
                 }
                 return false;
@@ -253,7 +256,7 @@ public class Test {
             for (int j = 0; j < crossArray.length; j++) {
                 for (int c = 0; c < word.length(); c++) {
                     if (crossArray[i][j] == word.charAt(c)) {
-                        if(tryVertical2(word, i, c, j)) return true;
+                        if (tryVertical2(word, i, c, j)) return true;
                     }
                 }
             }
@@ -290,18 +293,16 @@ public class Test {
         return new Boolean[]{flagPlus, flagMinus};
     }
 
-    static Boolean tryHorizontal2(String word, int i, int c, int j){
+    static Boolean tryHorizontal2(String word, int i, int c, int j) {
         try {
-            if(crossArray[i][j - c - 1] != '#') return false;
-        }
-        catch(ArrayIndexOutOfBoundsException e){
+            if (crossArray[i][j - c - 1] != '#') return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
 
         }
 
         try {
-            if(crossArray[i][j - c + word.length()] != '#') return false;
-        }
-        catch(ArrayIndexOutOfBoundsException e){
+            if (crossArray[i][j - c + word.length()] != '#') return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
 
         }
 
@@ -320,42 +321,36 @@ public class Test {
 
             Boolean[] result = verifyPosition(i, (j + k - c), word.charAt(k), true);
 
-            if(crossArray[i][j + k - c] == word.charAt(k)){
+            if (crossArray[i][j + k - c] == word.charAt(k)) {
                 letterCount++;
-                if(!result[0]){
+                if (!result[0]) {
                     countPlus++;
-                }
-                else{
+                } else {
                     countPlus = 0;
                 }
 
-                if(!result[1]){
+                if (!result[1]) {
                     countMinus++;
-                }
-                else{
+                } else {
                     countMinus = 0;
                 }
-            }
-            else if(crossArray[i][j + k - c] == '#'){
-                if(!result[0]){
+            } else if (crossArray[i][j + k - c] == '#') {
+                if (!result[0]) {
                     return false;
-                }
-                else{
+                } else {
                     countPlus = 0;
                 }
 
-                if(!result[1]){
+                if (!result[1]) {
                     return false;
-                }
-                else{
+                } else {
                     countMinus = 0;
                 }
-            }
-            else{
+            } else {
                 return false;
             }
 
-            if(countPlus >= 2 || countMinus >= 2 || letterCount == word.length()){
+            if (countPlus >= 2 || countMinus >= 2 || letterCount == word.length()) {
                 return false;
             }
         }
@@ -370,7 +365,7 @@ public class Test {
             for (int j = 0; j < crossArray.length; j++) {
                 for (int c = 0; c < word.length(); c++) {
                     if (crossArray[i][j] == word.charAt(c)) {
-                        if(tryHorizontal2(word, i, c, j)) return true;
+                        if (tryHorizontal2(word, i, c, j)) return true;
                     }
                 }
             }
