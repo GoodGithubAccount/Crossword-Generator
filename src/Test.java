@@ -86,6 +86,18 @@ public class Test {
             textArray[textArray.length - i - 1] = temp;
         }
 
+        Random random = new Random(System.currentTimeMillis());
+        for(int j = 0; j < textArray.length/10; j++){
+            for (int i = 0; i < textArray.length / 10; i++) {
+                String tempString = textArray[(j * 10) + i];
+                int indexToSwap = random.nextInt(textArray.length);
+
+                textArray[i] = textArray[indexToSwap];
+                textArray[indexToSwap] = tempString;
+            }
+        }
+
+
         return textArray;
     }
 
