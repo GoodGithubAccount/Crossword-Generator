@@ -11,10 +11,13 @@ public class Test {
         int startSize = 30;
         boolean useRandomMethod = false; // Other method is sorted by length. Longest first.
 
-        crossBuilder(startSize, textArray, useRandomMethod);
+        int placedWords = 0;
+        while(placedWords < textArray.length){
+            placedWords = crossBuilder(startSize, textArray, useRandomMethod);
+        }
     }
 
-    static String[] crossBuilder(int size, String[] textArray, boolean useRandomMethod) {
+    static int crossBuilder(int size, String[] textArray, boolean useRandomMethod) {
         crossArray = new char[size][size];
 
         for (int i = 0; i < crossArray.length; i++) {
@@ -32,7 +35,7 @@ public class Test {
         int attempts = 0;
 
         Random random = new Random(System.currentTimeMillis());
-        while (placedWords < textArray.length && attempts < 2000000) {
+        while (placedWords < textArray.length && attempts < 100000) {
             boolean randomDirection = random.nextBoolean();
             if (tryPlace(wordList.get(0), placedWords, randomDirection)) {
                 placedWords++;
@@ -59,7 +62,7 @@ public class Test {
         }
         System.out.println("Total Words: " + placedWords + "/" + textArray.length);
 
-        return null;
+        return placedWords;
     }
 
     static String[] randomArray(String[] textArray){
@@ -92,7 +95,7 @@ public class Test {
                 String tempString = textArray[(j * 10) + i];
                 int indexToSwap = random.nextInt(textArray.length);
 
-                textArray[i] = textArray[indexToSwap];
+                textArray[(j * 10) + i] = textArray[indexToSwap];
                 textArray[indexToSwap] = tempString;
             }
         }
