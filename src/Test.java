@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Test {
     static char crossArray[][] = {};
+    static char savedCrossArray[][] = {};
 
     // Times to try on a crossword with no progress before giving up and starting a new one
     static int tryCrosswordLimit = 20000;
@@ -27,6 +28,18 @@ public class Test {
             placedWords = crossBuilder(startSize, textArray, useRandomMethod);
             if(placedWords > largestSoFar){
                 largestSoFar = placedWords;
+                savedCrossArray = crossArray;
+            }
+
+            for (int i = 0; i < savedCrossArray.length; i++) {
+                for (int j = 0; j < savedCrossArray.length; j++) {
+                    if (savedCrossArray[i][j] != '#') {
+                        System.out.print(" " + ConsoleColors.RED_BOLD + savedCrossArray[i][j] + ConsoleColors.RESET + " ");
+                    } else {
+                        System.out.print(" " + savedCrossArray[i][j] + " ");
+                    }
+                }
+                System.out.println();
             }
             System.out.println("Largest so far: " + largestSoFar + "/" + textArray.length);
         }
@@ -103,6 +116,9 @@ public class Test {
             textArray[textArray.length - i - 1] = temp;
         }
 
+
+        // TODO: Make this optional by setting
+        /*
         Random random = new Random(System.currentTimeMillis());
         for(int j = 0; j < textArray.length/12; j++){
             for (int i = 0; i < textArray.length / 12; i++) {
@@ -116,6 +132,7 @@ public class Test {
                 textArray[indexToSwap] = tempString;
             }
         }
+        */
 
 
         return textArray;
@@ -170,6 +187,7 @@ public class Test {
 
         int countPlus = 0;
         int countMinus = 0;
+        int letterCount = 0;
         for (int k = 0; k < word.length(); k++) {
             try {
                 if (crossArray[i + k - c][j] != '#' && crossArray[i + k - c][j] != word.charAt(k)) {
@@ -183,6 +201,7 @@ public class Test {
             Boolean[] result = verifyPosition((i + k - c), j, word.charAt(k), false);
 
             if(crossArray[i + k - c][j] == word.charAt(k)){
+                letterCount++;
                 if(!result[0]){
                     countPlus++;
                 }
@@ -216,7 +235,10 @@ public class Test {
                 return false;
             }
 
-            if(countPlus >= 2 || countMinus >= 2){
+            if(countPlus >= 2 || countMinus >= 2 || letterCount == word.length()){
+                if(letterCount == word.length()){
+                    System.out.println("TEST\n\n\nTEST\n\n\nTEST");
+                }
                 return false;
             }
         }
@@ -285,6 +307,7 @@ public class Test {
 
         int countPlus = 0;
         int countMinus = 0;
+        int letterCount = 0;
 
         for (int k = 0; k < word.length(); k++) {
             try {
@@ -298,6 +321,7 @@ public class Test {
             Boolean[] result = verifyPosition(i, (j + k - c), word.charAt(k), true);
 
             if(crossArray[i][j + k - c] == word.charAt(k)){
+                letterCount++;
                 if(!result[0]){
                     countPlus++;
                 }
@@ -331,7 +355,7 @@ public class Test {
                 return false;
             }
 
-            if(countPlus >= 2 || countMinus >= 2){
+            if(countPlus >= 2 || countMinus >= 2 || letterCount == word.length()){
                 return false;
             }
         }
