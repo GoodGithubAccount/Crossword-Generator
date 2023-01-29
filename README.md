@@ -1,5 +1,7 @@
 # Crossword-Generator 
 
+It works like ass 🤡🤡
+
 ### Iteration 1
 Nvm that, 115/123 at 30x30
 
