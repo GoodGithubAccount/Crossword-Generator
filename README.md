@@ -1,6 +1,6 @@
 # Crossword-Generator 
 
-# Iteration 1
+## Iteration 1
 Think this is the best result so far, 107/123 words at size 30x30
 
 ![image](https://user-images.githubusercontent.com/22419372/215318925-606c26d7-9589-41bb-98af-42529aa6deb7.png)
