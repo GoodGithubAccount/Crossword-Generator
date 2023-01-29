@@ -3,6 +3,10 @@
 It works like ass 🤡🤡 the code is more ass
 
 ### Iteration 1.2
+Went down to 29x29, still 123/123
+
+![idea64_2023-01-29_12-37-57](https://user-images.githubusercontent.com/22419372/215323517-5d486f8c-66cb-4ccd-af2e-d20fbc2f2dfb.png)
+
 Added a small shuffling of the sorted by length array. Shuffles them in groups of 10 so its still partly sorted by length, but doesnt try to build the crossword in the same order every time. Got 123/123 at 30x30
 
 ![idea64_2023-01-29_12-35-42](https://user-images.githubusercontent.com/22419372/215323390-86cfdb84-0a5f-48b4-9639-b320c5f2452c.png)
