@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Test {
+public class CrosswordMain {
     static char crossArray[][] = {};
     static char savedCrossArray[][] = {};
 
@@ -27,8 +27,6 @@ public class Test {
     // TODO: Implement functionality to check for several words at once,
     //  to make a valid combination
     public static void main(String[] args) {
-
-        String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase(); // Old small test data.
         String[] textArray = testData.split("\n");
 
         int placedWords = 0;
@@ -145,7 +143,7 @@ public class Test {
         // TODO: Implement better so its actually group size and not just used for division.
         //  Right now its not very transparent because it works inversely. E.g higher number smaller groups.
         //  Also doesnt work correctly at all numbers cause bad division. Implement modulus
-        int groupSize = 10;
+        int groupSize = 15;
         for(int j = 0; j < textArray.length/groupSize; j++){
             for (int i = 0; i < textArray.length / groupSize; i++) {
                 String tempString = textArray[(j * groupSize) + i];
@@ -159,38 +157,25 @@ public class Test {
             }
         }
 
-
-
         return textArray;
     }
 
     static Boolean tryPlace(String word, int placedWords, boolean randomDirection) {
 
         if (placedWords == 0) {
-            if (word.length() <= crossArray.length) {
-                int position = (crossArray.length - word.length()) / 2;
-                for (int i = 0; i < word.length(); i++) {
-                    // Change it to be random direction later
+            int length = word.length();
+            if (length <= crossArray.length) {
+                int position = (crossArray.length - length) / 2;
+                for (int i = 0; i < length; i++) {
                     crossArray[i + position][position + 1] = word.charAt(i);
                 }
                 return true;
             } else {
-                return false; // error too maybe
+                return false;
             }
         } else {
-            if (randomDirection) {
-                if (tryHorizontal(word)) {
-                    return true;
-                } else {
-                    return tryVertical(word);
-                }
-            } else {
-                if (tryVertical(word)) {
-                    return true;
-                } else {
-                    return tryHorizontal(word);
-                }
-            }
+            return randomDirection ? tryHorizontal(word) || tryVertical(word)
+                    : tryVertical(word) || tryHorizontal(word);
         }
     }
 
@@ -280,30 +265,19 @@ public class Test {
     }
 
     static Boolean[] verifyPosition(int y, int x, char letter, boolean isHorizontal) {
-        int xPlus = 0;
-        int yPlus = 0;
-        if (isHorizontal) {
-            yPlus = 1;
-        } else {
-            xPlus = 1;
-        }
+        int yPlus = isHorizontal ? 1 : 0;
+        int xPlus = isHorizontal ? 0 : 1;
 
-        boolean flagPlus = false;
-        boolean flagMinus = false;
+        int yPlusCoord = y + yPlus;
+        int xPlusCoord = x + xPlus;
+        int yMinusCoord = y - yPlus;
+        int xMinusCoord = x - xPlus;
 
-        if (y + yPlus >= crossArray.length || x + xPlus >= crossArray.length ||
-                y + yPlus < 0 || x + xPlus < 0) {
-            flagPlus = true;
-        } else if (crossArray[y + yPlus][x + xPlus] == '#') {
-            flagPlus = true;
-        }
+        boolean flagPlus = yPlusCoord >= crossArray.length || xPlusCoord >= crossArray.length ||
+                yPlusCoord < 0 || xPlusCoord < 0 || crossArray[yPlusCoord][xPlusCoord] == '#';
 
-        if (y - yPlus >= crossArray.length || x - xPlus >= crossArray.length ||
-                y - yPlus < 0 || x - xPlus < 0) {
-            flagMinus = true;
-        } else if (crossArray[y - yPlus][x - xPlus] == '#') {
-            flagMinus = true;
-        }
+        boolean flagMinus = yMinusCoord >= crossArray.length || xMinusCoord >= crossArray.length ||
+                yMinusCoord < 0 || xMinusCoord < 0 || crossArray[yMinusCoord][xMinusCoord] == '#';
 
         return new Boolean[]{flagPlus, flagMinus};
     }

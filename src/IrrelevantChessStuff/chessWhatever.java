@@ -1,3 +1,5 @@
+package IrrelevantChessStuff;
+
 public class chessWhatever{
     int amount = 0;
     char pieceType = 'A';

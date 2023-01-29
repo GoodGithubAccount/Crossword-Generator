@@ -1,6 +1,5 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
+package IrrelevantChessStuff;
+
 import java.util.Random;
 
 public class ChessRandom {
