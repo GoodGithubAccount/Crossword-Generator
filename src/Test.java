@@ -21,6 +21,11 @@ public class Test {
     // TODO: Implement
     static boolean alwaysPrint = false;
 
+    // TODO: Make crossbuilder return this instead.
+    static String missingWords = "";
+
+    // TODO: Implement functionality to check for several words at once,
+    //  to make a valid combination
     public static void main(String[] args) {
 
         String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase(); // Old small test data.
@@ -28,11 +33,13 @@ public class Test {
 
         int placedWords = 0;
         int largestSoFar = 0;
+        String savedMissing = "";
         while (placedWords < textArray.length) {
             placedWords = crossBuilder(startSize, textArray, useRandomMethod);
             if (placedWords > largestSoFar) {
                 largestSoFar = placedWords;
                 savedCrossArray = crossArray;
+                savedMissing = missingWords;
 
                 for (int i = 0; i < savedCrossArray.length; i++) {
                     for (int j = 0; j < savedCrossArray.length; j++) {
@@ -45,6 +52,7 @@ public class Test {
                     System.out.println();
                 }
                 System.out.println("Largest so far: " + largestSoFar + "/" + textArray.length);
+                System.out.println("Missing words: " + savedMissing);
             }
         }
     }
@@ -53,9 +61,7 @@ public class Test {
         crossArray = new char[size][size];
 
         for (int i = 0; i < crossArray.length; i++) {
-            for (int j = 0; j < crossArray.length; j++) {
-                crossArray[i][j] = '#';
-            }
+            Arrays.fill(crossArray[i], '#');
         }
 
         if (useRandomMethod) textArray = randomArray(textArray);
@@ -83,6 +89,12 @@ public class Test {
                 wordList.remove(0);
                 wordList.add(word);
             }
+        }
+
+        missingWords = "";
+        while(wordList.size() > 0){
+            missingWords += wordList.get(0) + " ";
+            wordList.remove(0);
         }
 
         // TODO: Hook up to always print or not,
