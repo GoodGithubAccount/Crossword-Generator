@@ -5,15 +5,16 @@ public class Test {
 
     public static void main(String[] args) {
 
-        String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase();
+        String textData = "one-two-three-four-five-six-seven-eight-nine-ten".toUpperCase(); // Old small test data.
         String[] textArray = testData.split("\n");
 
         int startSize = 30;
+        boolean useRandomMethod = false; // Other method is sorted by length. Longest first.
 
-        crossBuilder(startSize, textArray);
+        crossBuilder(startSize, textArray, useRandomMethod);
     }
 
-    static String[] crossBuilder(int size, String[] textArray) {
+    static String[] crossBuilder(int size, String[] textArray, boolean useRandomMethod) {
         crossArray = new char[size][size];
 
         for (int i = 0; i < crossArray.length; i++) {
@@ -22,25 +23,22 @@ public class Test {
             }
         }
 
-        Random random = new Random(System.currentTimeMillis());
-        for (int i = 0; i < textArray.length; i++) {
-            String tempString = textArray[i];
-            int indexToSwap = random.nextInt(textArray.length);
-
-            textArray[i] = textArray[indexToSwap];
-            textArray[indexToSwap] = tempString;
-        }
+        if(useRandomMethod) textArray = randomArray(textArray);
+        else textArray = sortedByLengthArray(textArray);
 
         List<String> wordList = new ArrayList<>(Arrays.asList(textArray));
+
         int placedWords = 0;
         int attempts = 0;
 
+        Random random = new Random(System.currentTimeMillis());
         while (placedWords < textArray.length && attempts < 2000000) {
             boolean randomDirection = random.nextBoolean();
             if (tryPlace(wordList.get(0), placedWords, randomDirection)) {
-                wordList.remove(0);
                 placedWords++;
+                System.out.println("Word " + placedWords + " Placed: " + wordList.get(0));
                 attempts = 0;
+                wordList.remove(0);
             } else {
                 attempts++;
                 String word = wordList.get(0);
@@ -62,6 +60,33 @@ public class Test {
         System.out.println("Total Words: " + placedWords + "/" + textArray.length);
 
         return null;
+    }
+
+    static String[] randomArray(String[] textArray){
+
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = 0; i < textArray.length; i++) {
+            String tempString = textArray[i];
+            int indexToSwap = random.nextInt(textArray.length);
+
+            textArray[i] = textArray[indexToSwap];
+            textArray[indexToSwap] = tempString;
+        }
+
+        return textArray;
+    }
+
+    static String[] sortedByLengthArray(String[] textArray){
+        Arrays.sort(textArray, Comparator.comparingInt(String::length));
+
+        for(int i = 0; i < textArray.length / 2; i++)
+        {
+            String temp = textArray[i];
+            textArray[i] = textArray[textArray.length - i - 1];
+            textArray[textArray.length - i - 1] = temp;
+        }
+
+        return textArray;
     }
 
     static Boolean tryPlace(String word, int placedWords, boolean randomDirection) {
@@ -166,7 +191,6 @@ public class Test {
         for (int k = 0; k < word.length(); k++) {
             crossArray[i + k - c][j] = word.charAt(k);
         }
-        System.out.println(word);
         return true;
     }
 
@@ -282,7 +306,6 @@ public class Test {
         for (int k = 0; k < word.length(); k++) {
             crossArray[i][j + k - c] = word.charAt(k);
         }
-        System.out.println(word);
         return true;
     }
 
