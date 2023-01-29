@@ -1,6 +1,6 @@
 # Crossword-Generator 
 
-It works like ass 🤡🤡
+It works like ass 🤡🤡 the code is more ass
 
 ### Iteration 1
 Nvm that, 115/123 at 30x30
